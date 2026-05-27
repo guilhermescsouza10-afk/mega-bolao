@@ -1,4 +1,4 @@
-# Entre Amigos - Bolão Copa do Mundo 2026
+# Mega Bolão - Bolão Copa do Mundo 2026
 
 App PWA mobile-first para bolão de futebol da Copa do Mundo FIFA 2026.
 
