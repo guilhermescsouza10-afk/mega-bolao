@@ -26,7 +26,7 @@ export default function Login() {
         <Logo size="lg" />
 
         <p className="text-pitch-400 text-sm text-center leading-relaxed">
-          Crie seu grupo, convide os amigos e dispute o bolão da Copa 2026.
+          Crie seu grupo, convide os amigos e dispute o Mega BOLÃO da Copa 2026.
         </p>
 
         <div className="w-full space-y-4">

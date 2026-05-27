@@ -18,9 +18,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'Entre Amigos - Bolão Copa 2026',
-        short_name: 'Entre Amigos',
-        description: 'Bolão da Copa do Mundo FIFA 2026 entre amigos',
+        name: 'Mega BOLÃO - Copa 2026',
+        short_name: 'Mega BOLÃO',
+        description: 'Mega BOLÃO - Copa do Mundo FIFA 2026',
         theme_color: '#09090b',
         background_color: '#09090b',
         display: 'standalone',

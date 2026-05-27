@@ -5,8 +5,8 @@ export default function Logo({ size = 'md' }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <h1 className={`${textSize[size]} font-extrabold tracking-tight`}>
-        <span className="text-white">Entre</span>
-        <span className="text-accent"> Amigos</span>
+        <span className="text-white">Mega</span>
+        <span className="text-accent"> BOLÃO</span>
       </h1>
       <p className={`${subSize[size]} text-pitch-500 font-medium tracking-[0.2em] uppercase`}>
         Copa do Mundo 2026

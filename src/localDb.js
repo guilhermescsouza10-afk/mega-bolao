@@ -1,5 +1,6 @@
 const API_URL = '/api/db';
-const DB_KEY = 'entreAmigos_db';
+const DB_KEY = 'megaBolao_db';
+const LEGACY_DB_KEY = 'entreAmigos_db'; // backward compatibility
 
 let apiMode = null;
 const listeners = {};
@@ -33,7 +34,10 @@ async function api(action, params = {}) {
 
 // ── localStorage helpers ──
 function getStore() {
-  try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch { return {}; }
+  try {
+    const data = localStorage.getItem(DB_KEY) || localStorage.getItem(LEGACY_DB_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch { return {}; }
 }
 function saveStore(s) { localStorage.setItem(DB_KEY, JSON.stringify(s)); }
 

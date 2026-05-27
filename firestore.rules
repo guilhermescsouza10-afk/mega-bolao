@@ -1,0 +1,111 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ══════════════════════════════════
+    // Usuários
+    // ══════════════════════════════════
+    match /usuarios/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // ══════════════════════════════════
+    // Jogos (matches) — read-only para usuários
+    // Resultados são inseridos via Cloud Functions
+    // ══════════════════════════════════
+    match /jogos/{jogoId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only via Cloud Functions / admin SDK
+    }
+
+    // ══════════════════════════════════
+    // Seleções e Jogadores (referência)
+    // ══════════════════════════════════
+    match /selecoes/{selecaoId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /jogadores/{jogadorId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // ══════════════════════════════════
+    // Grupos
+    // ══════════════════════════════════
+    match /grupos/{grupoId} {
+      // Anyone authenticated can read group info (needed for invite flow)
+      allow read: if request.auth != null;
+
+      // Only authenticated users can create groups
+      allow create: if request.auth != null
+                    && request.resource.data.adminUid == request.auth.uid;
+
+      // Only admin can update group (rename, etc.)
+      allow update: if request.auth != null
+                    && resource.data.adminUid == request.auth.uid;
+
+      // Only admin can delete group
+      allow delete: if request.auth != null
+                    && resource.data.adminUid == request.auth.uid;
+
+      // ─── Membros ───
+      match /membros/{userId} {
+        // Members can read other members in their group
+        allow read: if request.auth != null
+                    && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+        // Users can add themselves (join via invite)
+        allow create: if request.auth != null
+                      && request.auth.uid == userId;
+
+        // Users can update their own member doc
+        allow update: if request.auth != null
+                      && (request.auth.uid == userId
+                          // Admin can update any member (for scoring via client)
+                          || get(/databases/$(database)/documents/grupos/$(grupoId)).data.adminUid == request.auth.uid);
+
+        // Admin can remove members
+        allow delete: if request.auth != null
+                      && get(/databases/$(database)/documents/grupos/$(grupoId)).data.adminUid == request.auth.uid;
+      }
+
+      // ─── Palpites ───
+      match /palpites/{jogoId} {
+        allow read: if request.auth != null
+                    && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+        match /votos/{votanteId} {
+          // User can read their own vote anytime
+          // Other votes only visible after deadline (client enforces this + backend calculates)
+          allow read: if request.auth != null
+                      && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+          // User can create/update only their own vote
+          allow create, update: if request.auth != null
+                                && request.auth.uid == votanteId
+                                && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+          // No one can delete votes
+          allow delete: if false;
+        }
+      }
+
+      // ─── Bonus ───
+      match /bonus/{userId} {
+        // Members can read bonus after deadline (client-side enforcement)
+        allow read: if request.auth != null
+                    && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+        // Users can only write their own bonus
+        allow create, update: if request.auth != null
+                              && request.auth.uid == userId
+                              && exists(/databases/$(database)/documents/grupos/$(grupoId)/membros/$(request.auth.uid));
+
+        allow delete: if false;
+      }
+    }
+  }
+}

@@ -18,7 +18,7 @@ export default function ShareButton({ groupName, inviteToken }) {
 
   const handleWhatsApp = () => {
     const text = encodeURIComponent(
-      `⚽ Entre pro nosso bolão da Copa 2026!\n\n` +
+      `⚽ Entre pro Mega BOLÃO da Copa 2026!\n\n` +
       `Grupo: ${groupName}\n` +
       `🔗 ${inviteUrl}`
     );
