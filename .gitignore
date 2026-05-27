@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment variables (NUNCA commitar - contém senhas do banco)
+.env
+.env.*
+.env.local
+
+# Vercel
+.vercel/
+
+# Firebase (legado)
+.firebase/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/

@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "crons": [
+    {
+      "path": "/api/sync-results",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/update-bracket",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}
